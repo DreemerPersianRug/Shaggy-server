@@ -12,7 +12,7 @@ def createUDPResponse(length, pattern=True, small_pattern=True):
     if not pattern:
         for _ in range(length):
             if not small_pattern:
-                blocks += struct.pack('>I', random.randint(0, 0xFFFFFFFF))
+                blocks += struct.pack('<I', random.randint(0x3f9f0000, 0x3f9ff000))
             else:
                 blocks += struct.pack('<I', 0x3f9f0000)
     else:
@@ -61,7 +61,7 @@ def reciver(local_ip='192.168.0.102', local_port=50018, remote_ip='192.168.0.106
             print("Received message:", data)
 
             decode_data = readUDPRequest(data)
-            response = createUDPResponse(decode_data[-1] * 3, False)
+            response = createUDPResponse(decode_data[-1] * 3, False, False)
             print(response)
             sock.sendto(response, (remote_ip, remote_port))
             print(f"Response sent {response} {(remote_ip, remote_port)}")
@@ -70,4 +70,4 @@ def reciver(local_ip='192.168.0.102', local_port=50018, remote_ip='192.168.0.106
             print("Error:", str(e))
 
 if __name__ == "__main__":
-    reciver('192.168.0.102', 50035, '192.168.0.106', 50036)
+    reciver('192.168.0.102', 50051, '192.168.0.106', 50052)
